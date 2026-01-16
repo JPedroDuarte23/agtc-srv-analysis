@@ -8,7 +8,7 @@ ARG NEW_RELIC_AGENT_VERSION=10.26.0
 RUN curl -L https://download.newrelic.com/dot_net_agent/previous_releases/${NEW_RELIC_AGENT_VERSION}/newrelic-dotnet-agent_${NEW_RELIC_AGENT_VERSION}_amd64.tar.gz | tar -C . -xz
 
 COPY agtc-srv-analysis.sln .
-COPY AgtcSrvIngestion.API/*.csproj ./AgtcSrvAnalysis.API/
+COPY AgtcSrvAnalysis.Worker/*.csproj ./AgtcSrvAnalysis.Worker/
 COPY AgtcSrvAnalysis.Application/*.csproj ./AgtcSrvAnalysis.Application/
 COPY AgtcSrvAnalysis.Domain/*.csproj ./AgtcSrvAnalysis.Domain/
 COPY AgtcSrvAnalysis.Infrastructure/*.csproj ./AgtcSrvAnalysis.Infrastructure/
@@ -17,7 +17,7 @@ COPY AgtcSrvAnalysis.Test/*.csproj ./AgtcSrvAnalysis.Test/
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish AgtcSrvAnalysis.API/AgtcSrvAnalysis.API.csproj -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish AgtcSrvAnalysis.Worker/AgtcSrvAnalysis.Worker.csproj -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 WORKDIR /app
@@ -41,4 +41,4 @@ COPY --from=build /app/publish .
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "AgtcSrvAnalysis.API.dll"]
+ENTRYPOINT ["dotnet", "AgtcSrvAnalysis.Worker.dll"]
