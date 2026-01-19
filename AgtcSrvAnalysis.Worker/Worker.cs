@@ -3,6 +3,7 @@ using AgtcSrvAnalysis.Domain.Entities;
 using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
+using System.Text.Json.Serialization;
 
 namespace AgtcSrvAnalysis.Worker;
 
@@ -31,7 +32,7 @@ public class Worker : BackgroundService
         {
             try
             {
-                var request = new ReceiveMessageRequest
+                    var request = new ReceiveMessageRequest
                 {
                     QueueUrl = queueUrl,
                     MaxNumberOfMessages = 10,
@@ -57,10 +58,14 @@ public class Worker : BackgroundService
     {
         try
         {
-            var sensorData = JsonSerializer.Deserialize<SensorData>(message.Body, new JsonSerializerOptions
+            var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            });
+            };
+
+            options.Converters.Add(new JsonStringEnumConverter());
+
+            var sensorData = JsonSerializer.Deserialize<SensorData>(message.Body, options);
 
             if (sensorData != null)
             {
