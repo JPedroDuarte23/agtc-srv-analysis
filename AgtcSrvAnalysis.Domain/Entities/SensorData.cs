@@ -13,6 +13,9 @@ public class SensorData
 {
     public Guid Id { get; set; }
     public Guid FieldId { get; set; }
+    public string fieldName { get; set; }
+    public string propertyName { get; set; }
+    public string farmerName { get; set; }
     public SensorType SensorType { get; set; }
     public double Value { get; set; }
     public DateTime Timestamp { get; set; }
