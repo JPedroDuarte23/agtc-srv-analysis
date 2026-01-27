@@ -31,7 +31,10 @@ namespace AgtcSrvAnalysis.Test.Services
                 SensorType = SensorType.Temperatura, // Simulando string ou Enum.ToString()
                 Value = 25.0,
                 FieldId = Guid.NewGuid(),
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
             };
 
             // Act
@@ -48,8 +51,17 @@ namespace AgtcSrvAnalysis.Test.Services
         [Fact]
         public async Task AnalyzeAndPersistAsync_Humidity_ShouldTriggerDroughtAlert_WhenBelow30()
         {
-            // Arrange
-            var sensorData = CreateSensorData("Umidade", 25.0); // Abaixo de 30
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Umidade, // Simulando string ou Enum.ToString()
+                Value = 25.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            };
 
             // Captura o Console
             using var consoleOutput = new StringWriter();
@@ -69,7 +81,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Humidity_ShouldNotTriggerAlert_WhenAbove30()
         {
             // Arrange
-            var sensorData = CreateSensorData("Umidade", 40.0); // Normal
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Umidade, // Simulando string ou Enum.ToString()
+                Value = 40.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            };
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -91,7 +113,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Temperature_ShouldTriggerFrostAlert_WhenBelow5()
         {
             // Arrange
-            var sensorData = CreateSensorData("Temperatura", 4.0); // Geada (< 5)
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Temperatura,
+                Value = 4.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            }; // Geada (< 5)
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -108,7 +140,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Temperature_ShouldTriggerHeatAlert_WhenAbove35()
         {
             // Arrange
-            var sensorData = CreateSensorData("Temperatura", 36.0); // Calor (> 35)
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Temperatura,
+                Value = 36.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            }; // Calor (> 35)
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -125,7 +167,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Temperature_ShouldNotTriggerAlert_WhenNormal()
         {
             // Arrange
-            var sensorData = CreateSensorData("Temperatura", 25.0); // Normal (5 a 35)
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Temperatura,
+                Value = 25.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            }; // Normal (5 a 35)
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -146,7 +198,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Pressure_ShouldTriggerStormAlert_WhenBelow1000()
         {
             // Arrange
-            var sensorData = CreateSensorData("Pressao", 990.0); // Tempestade (< 1000)
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Pressao,
+                Value = 400.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            }; // Tempestade (< 1000)
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -164,7 +226,17 @@ namespace AgtcSrvAnalysis.Test.Services
         public async Task AnalyzeAndPersistAsync_Pressure_ShouldNotTriggerAlert_WhenNormal()
         {
             // Arrange
-            var sensorData = CreateSensorData("Pressao", 1013.0); // Normal
+            var sensorData = new SensorData
+            {
+                Id = Guid.NewGuid(),
+                SensorType = SensorType.Pressao,
+                Value = 1013.0,
+                FieldId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                fieldName = "Campo Teste",
+                propertyName = "Propriedade Teste",
+                farmerName = "Fazendeiro Teste"
+            }; // Normal
 
             using var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
@@ -175,23 +247,6 @@ namespace AgtcSrvAnalysis.Test.Services
             // Assert
             var output = consoleOutput.ToString();
             Assert.DoesNotContain("TEMPESTADE", output);
-        }
-
-        // =================================================================
-        // HELPER METHOD
-        // =================================================================
-        private SensorData CreateSensorData(string type, double value)
-        {
-            SensorType sensorType = Enum.Parse<SensorType>(type, true);
-
-            return new SensorData
-            {
-                Id = Guid.NewGuid(),
-                SensorType = sensorType,
-                Value = value,
-                FieldId = Guid.NewGuid(),
-                Timestamp = DateTime.UtcNow
-            };
         }
     }
 }
